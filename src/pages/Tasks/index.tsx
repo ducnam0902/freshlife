@@ -1,8 +1,9 @@
+import { Box } from '@mui/material'
 import React from 'react'
 
 const Tasks = () => {
     return (
-        <div>Tasks</div>
+        <Box sx={{ background: '#2d3d2' }}>Tasks</Box>
     )
 }
 
