@@ -20,7 +20,21 @@ const Router = () => {
     const getInitialSesson = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        dispatch(setSession(session));
+        const { data } = await supabase.from('users').select('*').eq("email", session?.user?.email ?? '');
+        if (!!session && data !== null && data?.length === 0) {
+          const { data: initUserData, error } = await supabase.from("users").upsert({
+            email: session?.user.email ?? '',
+            avatar: session?.user.user_metadata.avatar_url,
+            full_name: session?.user.user_metadata.fullName,
+          }).select().single();
+          if (error) {
+            throw new Error(error.message)
+          }
+          dispatch(setSession(initUserData));
+        } else if (data !== null) {
+          dispatch(setSession(data[0]));
+        }
+
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
@@ -32,9 +46,8 @@ const Router = () => {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
-        dispatch(setSession(newSession));
+        console.log(newSession)
         dispatch(hideLoading());
-
       }
     );
 

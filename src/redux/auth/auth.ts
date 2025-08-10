@@ -1,8 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Session } from "@supabase/supabase-js";
+
+export interface IUserSession {
+  email: string;
+  avatar: string | null;
+  fullName: string | null;
+  id: string;
+  created_at: string;
+}
 
 interface AuthState {
-  session: Session | null;
+  session: IUserSession | null;
 }
 
 const initialState: AuthState = {
@@ -13,7 +20,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setSession: (state, action: PayloadAction<Session>) => {
+    setSession: (state, action: PayloadAction<IUserSession>) => {
       state.session = action.payload;
     },
     removeSession: (state) => {

@@ -22,7 +22,6 @@ const SignIn = () => {
                     redirectTo: window.location.origin + '/',
                 }
             });
-
             if (error) {
                 throw error;
             }
